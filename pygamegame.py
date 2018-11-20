@@ -51,8 +51,12 @@ class PygameGame(object):
         self.player.update()
 
     def redrawAll(self, screen):
-        self.player.draw()
-        self.maze.draw()
+        if self.mode == "Play":
+            self.player.draw()
+            self.maze.draw()
+        elif self.mode == "Start":
+            self.
+
 
 
     def isKeyPressed(self, key):
