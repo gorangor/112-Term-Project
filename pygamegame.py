@@ -9,6 +9,7 @@ class PygameGame(object):
     def init(self):
         self.player = Player()
         self.maze = Maze()
+        self.mode = "Start"
 
 
     def mousePressed(self, x, y):
@@ -24,14 +25,41 @@ class PygameGame(object):
         pass
 
     def keyPressed(self, keyCode, modifier):
-        if keyCode == pygame.K_RIGHT:
-            self.player.gottaGoFastX(5)
-        elif keyCode == pygame.K_LEFT:
-            self.player.gottaGoFastX(-5)
-        if keyCode == pygame.K_DOWN:
-            self.player.gottaGoFastY(5)
-        elif keyCode == pygame.K_UP:
-            self.player.gottaGoFastY(-5)
+        if self.mode == "Play":
+            if keyCode == pygame.K_RIGHT:
+                self.player.gottaGoFastX(5)
+            elif keyCode == pygame.K_LEFT:
+                self.player.gottaGoFastX(-5)
+            if keyCode == pygame.K_DOWN:
+                self.player.gottaGoFastY(5)
+            elif keyCode == pygame.K_UP:
+                self.player.gottaGoFastY(-5)
+        elif self.mode == "Start":
+            if keyCode == pygame.K_RIGHT and 15 <= self.player.mS <= 63:
+
+                self.player.mS += 4
+                self.player.iS = round(1/self.player.iS*700) + 1
+                self.player.rect.x = round(1 / self.player.mS * 700) + 1
+                self.player.rect.y = round(1 / self.player.mS * 700) + 1
+                self.maze.mS += 4
+                self.maze.iS =round(1/self.maze.mS*700) + 1
+                self.maze.lst = maze(lstMaker(self.maze.mS-1), self.maze.mS)
+                self.player.image = pygame.transform.scale(pygame.image.load("Ice Zombie.png"),((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
+                self.maze.image = pygame.transform.scale(pygame.image.load("wall_mid.png"), (self.maze.iS, self.maze.iS))
+
+            elif keyCode == pygame.K_LEFT and 17 <= self.player.mS <= 65:
+                self.player.mS -= 4
+                self.player.iS = round(1 / self.player.iS * 700) + 1
+                self.player.rect.x = round(1 / self.player.mS * 700) + 1
+                self.player.rect.y = round(1 / self.player.mS * 700) + 1
+                self.maze.mS -= 4
+                self.maze.iS = round(1 / self.maze.mS * 700) + 1
+                self.maze.lst = maze(lstMaker(self.maze.mS-1), self.maze.mS)
+                self.player.image = pygame.transform.scale(pygame.image.load("Ice Zombie.png"),((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
+                self.maze.image = pygame.transform.scale(pygame.image.load("wall_mid.png"), (self.maze.iS, self.maze.iS))
+            elif keyCode == pygame.K_SPACE:
+                self.mode = "Play"
+            pass
 
     def keyReleased(self, keyCode, modifier):
         if keyCode == pygame.K_RIGHT:
@@ -45,7 +73,7 @@ class PygameGame(object):
 
     def timerFired(self, dt):
         for locations in self.maze.locations:
-            if locations[0] - iS/2 <= self.player.rect.x <= locations[0] + iS/2 and locations[1] - iS/2 <= self.player.rect.y <= locations[1] + iS/2:
+            if locations[0] - self.maze.iS/2 <= self.player.rect.x <= locations[0] + self.maze.iS/2 and locations[1] - self.maze.iS/2 <= self.player.rect.y <= locations[1] + self.maze.iS/2:
                 self.player.rect.x = self.player.oldX
                 self.player.rect.y = self.player.oldY
         self.player.update()
@@ -55,7 +83,10 @@ class PygameGame(object):
             self.player.draw()
             self.maze.draw()
         elif self.mode == "Start":
-            self.
+            begin = pygame.font.SysFont("monospace", 50).render("Press Space to Start", 1, (0, 0, 0))
+            screen.blit(begin, (self.width/3.5, self.height/8))
+            maze_Size = pygame.font.SysFont("monospace", 50).render("Input Maze Size: " + str(self.player.mS), 1, (0, 0, 0))
+            screen.blit(maze_Size, (self.width/3.5, self.height/2))
 
 
 
