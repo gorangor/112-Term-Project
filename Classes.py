@@ -2,7 +2,7 @@ import pygame
 from setup import *
 from Maze import *
 from pygamegame import *
-mS = 30git
+mS = 30
 iS = round(1/mS*700) + 1
 class Player(pygame.sprite.Sprite):
     def __init__(self):
