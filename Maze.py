@@ -30,7 +30,7 @@ def maze(lst, x, row = 1, col = 1):
                 lst = maze(lst, x, row, col)
         if dir == 4:
             if row - 2 > 0 and lst[row-2][col] is False:
-                row = row -2
+                row = row - 2
                 lst[row][col] = True
                 lst[row + 1][col] = True
                 lst = maze(lst, x, row, col)

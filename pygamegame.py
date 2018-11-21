@@ -7,9 +7,12 @@ from setup import *
 class PygameGame(object):
 
     def init(self):
-        self.player = Player()
-        self.maze = Maze()
         self.mode = "Start"
+        self.image = "Ice Zombie.png"
+        self.image2 = "Masked Orc.png"
+        self.player = Player(self.image)
+        self.player2 = Player(self.image2)
+        self.maze = Maze()
 
 
     def mousePressed(self, x, y):
@@ -34,17 +37,30 @@ class PygameGame(object):
                 self.player.gottaGoFastY(5)
             elif keyCode == pygame.K_UP:
                 self.player.gottaGoFastY(-5)
+            if keyCode == pygame.K_d:
+                self.player2.gottaGoFastX(5)
+            elif keyCode == pygame.K_a:
+                self.player2.gottaGoFastX(-5)
+            if keyCode == pygame.K_s:
+                self.player2.gottaGoFastY(5)
+            elif keyCode == pygame.K_w:
+                self.player2.gottaGoFastY(-5)
         elif self.mode == "Start":
             if keyCode == pygame.K_RIGHT and 15 <= self.player.mS <= 63:
 
                 self.player.mS += 4
-                self.player.iS = round(1/self.player.iS*700) + 1
+                self.player.iS = round(1 / self.player.iS * 700) + 1
                 self.player.rect.x = round(1 / self.player.mS * 700) + 1
                 self.player.rect.y = round(1 / self.player.mS * 700) + 1
+                self.player2.mS += 4
+                self.player2.iS = round(1/self.player.iS*700) + 1
+                self.player2.rect.x = round(1/self.player.mS * 700) + 1
+                self.player2.rect.y = round(1 / self.player.mS * 700) + 1
                 self.maze.mS += 4
-                self.maze.iS =round(1/self.maze.mS*700) + 1
+                self.maze.iS = round(1 / self.maze.mS * 700) + 1
                 self.maze.lst = maze(lstMaker(self.maze.mS-1), self.maze.mS)
-                self.player.image = pygame.transform.scale(pygame.image.load("Ice Zombie.png"),((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
+                self.player.image = pygame.transform.scale(pygame.image.load(self.image),((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
+                self.player2.image = pygame.transform.scale(pygame.image.load(self.image2),((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
                 self.maze.image = pygame.transform.scale(pygame.image.load("wall_mid.png"), (self.maze.iS, self.maze.iS))
 
             elif keyCode == pygame.K_LEFT and 17 <= self.player.mS <= 65:
@@ -52,10 +68,15 @@ class PygameGame(object):
                 self.player.iS = round(1 / self.player.iS * 700) + 1
                 self.player.rect.x = round(1 / self.player.mS * 700) + 1
                 self.player.rect.y = round(1 / self.player.mS * 700) + 1
+                self.player2.mS -= 4
+                self.player2.iS = round(1/self.player.iS*700) + 1
+                self.player2.rect.x = round(1/self.player.mS * 700) + 1
+                self.player2.rect.y = round(1 / self.player.mS * 700) + 1
                 self.maze.mS -= 4
                 self.maze.iS = round(1 / self.maze.mS * 700) + 1
                 self.maze.lst = maze(lstMaker(self.maze.mS-1), self.maze.mS)
-                self.player.image = pygame.transform.scale(pygame.image.load("Ice Zombie.png"),((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
+                self.player.image = pygame.transform.scale(pygame.image.load(self.image),((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
+                self.player2.image = pygame.transform.scale(pygame.image.load(self.image2),((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
                 self.maze.image = pygame.transform.scale(pygame.image.load("wall_mid.png"), (self.maze.iS, self.maze.iS))
             elif keyCode == pygame.K_SPACE:
                 self.mode = "Play"
@@ -70,17 +91,30 @@ class PygameGame(object):
             self.player.gottaGoFastY(0)
         if keyCode == pygame.K_UP:
             self.player.gottaGoFastY(0)
+        if keyCode == pygame.K_d:
+            self.player2.gottaGoFastX(0)
+        if keyCode == pygame.K_a:
+            self.player2.gottaGoFastX(0)
+        if keyCode == pygame.K_s:
+            self.player2.gottaGoFastY(0)
+        if keyCode == pygame.K_w:
+            self.player2.gottaGoFastY(0)
 
     def timerFired(self, dt):
         for locations in self.maze.locations:
             if locations[0] - self.maze.iS/2 <= self.player.rect.x <= locations[0] + self.maze.iS/2 and locations[1] - self.maze.iS/2 <= self.player.rect.y <= locations[1] + self.maze.iS/2:
                 self.player.rect.x = self.player.oldX
                 self.player.rect.y = self.player.oldY
+            if locations[0] - self.maze.iS/2 <= self.player2.rect.x <= locations[0] + self.maze.iS/2 and locations[1] - self.maze.iS/2 <= self.player2.rect.y <= locations[1] + self.maze.iS/2:
+                self.player2.rect.x = self.player2.oldX
+                self.player2.rect.y = self.player2.oldY
         self.player.update()
+        self.player2.update()
 
     def redrawAll(self, screen):
         if self.mode == "Play":
             self.player.draw()
+            self.player2.draw()
             self.maze.draw()
         elif self.mode == "Start":
             begin = pygame.font.SysFont("monospace", 50).render("Press Space to Start", 1, (0, 0, 0))
