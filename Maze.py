@@ -12,7 +12,7 @@ def maze(lst, x, row = 1, col = 1):
         lst[row][col] = True
         if dir == 1:
             if col + 2 < x-1 and lst[row][col+2] is False:
-                col = col +2
+                col = col + 2
                 lst[row][col] = True
                 lst[row][col-1] = True
                 lst = maze(lst, x, row, col)

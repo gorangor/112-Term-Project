@@ -16,6 +16,7 @@ class PygameGame(object):
 
 
     def mousePressed(self, x, y):
+        print(x,y)
         pass
 
     def mouseReleased(self, x, y):
@@ -30,21 +31,21 @@ class PygameGame(object):
     def keyPressed(self, keyCode, modifier):
         if self.mode == "Play":
             if keyCode == pygame.K_RIGHT:
-                self.player.gottaGoFastX(5)
+                self.player.gottaGoFastX(self.player.speed)
             elif keyCode == pygame.K_LEFT:
-                self.player.gottaGoFastX(-5)
+                self.player.gottaGoFastX(-self.player.speed)
             if keyCode == pygame.K_DOWN:
-                self.player.gottaGoFastY(5)
+                self.player.gottaGoFastY(self.player.speed)
             elif keyCode == pygame.K_UP:
-                self.player.gottaGoFastY(-5)
+                self.player.gottaGoFastY(-self.player.speed)
             if keyCode == pygame.K_d:
-                self.player2.gottaGoFastX(5)
+                self.player2.gottaGoFastX(self.player2.speed)
             elif keyCode == pygame.K_a:
-                self.player2.gottaGoFastX(-5)
+                self.player2.gottaGoFastX(-self.player2.speed)
             if keyCode == pygame.K_s:
-                self.player2.gottaGoFastY(5)
+                self.player2.gottaGoFastY(self.player2.speed)
             elif keyCode == pygame.K_w:
-                self.player2.gottaGoFastY(-5)
+                self.player2.gottaGoFastY(-self.player2.speed)
         elif self.mode == "Start":
             if keyCode == pygame.K_RIGHT and 15 <= self.player.mS <= 63:
 
@@ -54,9 +55,9 @@ class PygameGame(object):
                 self.player.rect.y = round(1 / self.player.mS * 700) + 1
                 self.player2.mS += 4
                 self.player2.iS = round(1/self.player.iS*700) + 1
-                self.player2.rect.x = round(1/self.player.mS * 700) + 1
                 self.player2.rect.y = round(1 / self.player.mS * 700) + 1
                 self.maze.mS += 4
+                self.player2.rect.x = (self.maze.mS-364) * round(1/self.maze.mS*700)
                 self.maze.iS = round(1 / self.maze.mS * 700) + 1
                 self.maze.lst = maze(lstMaker(self.maze.mS-1), self.maze.mS)
                 self.player.image = pygame.transform.scale(pygame.image.load(self.image),((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
@@ -70,7 +71,7 @@ class PygameGame(object):
                 self.player.rect.y = round(1 / self.player.mS * 700) + 1
                 self.player2.mS -= 4
                 self.player2.iS = round(1/self.player.iS*700) + 1
-                self.player2.rect.x = round(1/self.player.mS * 700) + 1
+                self.player2.rect.x = self.maze.iS * (self.maze.mS - 4) - self.maze.iS
                 self.player2.rect.y = round(1 / self.player.mS * 700) + 1
                 self.maze.mS -= 4
                 self.maze.iS = round(1 / self.maze.mS * 700) + 1
@@ -80,6 +81,9 @@ class PygameGame(object):
                 self.maze.image = pygame.transform.scale(pygame.image.load("wall_mid.png"), (self.maze.iS, self.maze.iS))
             elif keyCode == pygame.K_SPACE:
                 self.mode = "Play"
+                print(mazeDraw(self.maze.lst))
+                print(self.player2.rect.x)
+                print(self.maze.mS)
             pass
 
     def keyReleased(self, keyCode, modifier):

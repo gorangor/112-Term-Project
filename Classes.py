@@ -15,6 +15,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = round(1/self.mS * 700) + 1
         self.oldX = 0
         self.oldY = 0
+        self.speed = 5
     def gottaGoFastX(self, dx):
         self.speedX = dx
     def gottaGoFastY(self, dy):
@@ -36,8 +37,12 @@ class Maze(pygame.sprite.Sprite):
         self.locations = []
     def draw(self):
         for rows in range(len(self.lst)):
-            for cols in range(len(self.lst[rows])):
+            for cols in range(0, len(self.lst)):
                 if not self.lst[rows][cols]:
                     screen.blit(self.image, (rows/self.mS * 700, cols/self.mS * 700))
                     if (rows/self.mS * 700, cols/self.mS * 700) not in self.locations:
                         self.locations.append((rows/self.mS * 700, cols/self.mS * 700))
+class Weapon:
+    def __init__(self):
+        self.dam = 5
+    pass
