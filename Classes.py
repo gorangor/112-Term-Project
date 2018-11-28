@@ -95,3 +95,5 @@ class Sword(pygame.sprite.Sprite):
         self.rect.y += self.speedY
     def draw(self):
         screen.blit(self.image, (self.rect.x, self.rect.y))
+class PowerUp(pygame.sprite.Sprite):
+    pass
