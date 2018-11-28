@@ -15,7 +15,7 @@ class PygameGame(object):
         self.player2.rect.x = 665 - self.player.rect.x
         self.player2.rect.y = 660 - self.player.rect.y
         self.maze = Maze()
-
+        self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
 
     def mousePressed(self, x, y):
         print(x,y)
@@ -34,8 +34,10 @@ class PygameGame(object):
         if self.mode == "Play":
             if keyCode == pygame.K_RIGHT:
                 self.player.gottaGoFastX(self.player.speed)
+                self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Right.png"), (self.player.iS//2, self.player.iS//2))
             elif keyCode == pygame.K_LEFT:
                 self.player.gottaGoFastX(-self.player.speed)
+                self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Left.png"), (self.player.iS//2, self.player.iS//2))
             if keyCode == pygame.K_DOWN:
                 self.player.gottaGoFastY(self.player.speed)
             elif keyCode == pygame.K_UP:
@@ -86,6 +88,7 @@ class PygameGame(object):
                 print(mazeDraw(self.maze.lst))
                 print((self.player2.rect.x, self.player2.rect.y))
                 print(self.maze.iS)
+                self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
             pass
 
     def keyReleased(self, keyCode, modifier):
@@ -114,7 +117,16 @@ class PygameGame(object):
             if locations[0] - self.maze.iS/2 <= self.player2.rect.x <= locations[0] + self.maze.iS/2 and locations[1] - self.maze.iS/2 <= self.player2.rect.y <= locations[1] + self.maze.iS/2:
                 self.player2.rect.x = self.player2.oldX
                 self.player2.rect.y = self.player2.oldY
+        if self.player2.rect.x - 10 <= self.player.rect.x <= self.player2.rect.x + 10 and self.player2.rect.y - 10 <= self.player.rect.y <= self.player2.rect.y + 10:
+            self.player2.rect.x = self.player2.oldX
+            self.player2.rect.y = self.player2.oldY
+        if self.player.rect.x - 10 <= self.player2.rect.x <= self.player.rect.x + 10 and self.player.rect.y - 10 <= self.player2.rect.y <= self.player.rect.y + 10:
+            self.player.rect.x = self.player.oldX
+            self.player.rect.y = self.player.oldY
         self.player.update()
+        self.sword.rect.x = self.player.rect.x + self.player.iS/2
+        self.sword.rect.y = self.player.rect.y + self.player.iS/2
+
         self.player2.update()
 
     def redrawAll(self, screen):
@@ -122,6 +134,8 @@ class PygameGame(object):
             self.player.draw()
             self.player2.draw()
             self.maze.draw()
+            self.sword.draw()
+            print(self.sword.rect.x)
         elif self.mode == "Start":
             begin = pygame.font.SysFont("monospace", 50).render("Press Space to Start", 1, (0, 0, 0))
             screen.blit(begin, (self.width/3.5, self.height/8))

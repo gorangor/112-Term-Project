@@ -16,6 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.oldX = 0
         self.oldY = 0
         self.speed = 5
+        self.heath = 100
     def gottaGoFastX(self, dx):
         self.speedX = dx
     def gottaGoFastY(self, dy):
@@ -42,7 +43,16 @@ class Maze(pygame.sprite.Sprite):
                     screen.blit(self.image, (rows/self.mS * 700, cols/self.mS * 700))
                     if (rows/self.mS * 700, cols/self.mS * 700) not in self.locations:
                         self.locations.append((rows/self.mS * 700, cols/self.mS * 700))
-class Weapon:
-    def __init__(self):
-        self.dam = 5
-    pass
+class Sword(pygame.sprite.Sprite):
+    def __init__(self,x,y,iS):
+        self.damge = 5
+        self.charge = 0
+        self.image = pygame.transform.scale(pygame.image.load("Sword_Right.png"), (iS//2, iS//2))
+        self.rect = self.image.get_rect()
+        self.rect.x = x + iS/2
+        self.rect.y = y + iS/2
+        self.mode = "Not Thrown"
+        self.speedX = 0
+        self.speedY = 0
+    def draw(self):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
