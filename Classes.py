@@ -16,7 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.oldX = 0
         self.oldY = 0
         self.speed = 5
-        self.heath = 100
+        self.health = 100
     def gottaGoFastX(self, dx):
         self.speedX = dx
     def gottaGoFastY(self, dy):
@@ -45,7 +45,7 @@ class Maze(pygame.sprite.Sprite):
                         self.locations.append((rows/self.mS * 700, cols/self.mS * 700))
 class Sword(pygame.sprite.Sprite):
     def __init__(self,x,y,iS):
-        self.damge = 5
+        self.damage = 100
         self.charge = 0
         self.image = pygame.transform.scale(pygame.image.load("Sword_Right.png"), (iS//2, iS//2))
         self.rect = self.image.get_rect()

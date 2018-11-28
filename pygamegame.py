@@ -16,6 +16,7 @@ class PygameGame(object):
         self.player2.rect.y = 660 - self.player.rect.y
         self.maze = Maze()
         self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
+        self.count = 0
 
     def mousePressed(self, x, y):
         print(x,y)
@@ -32,22 +33,28 @@ class PygameGame(object):
 
     def keyPressed(self, keyCode, modifier):
         if self.mode == "Play":
+            if keyCode == pygame.K_p:
+                self.sword.mode = "Thrown"
             if keyCode == pygame.K_RIGHT:
                 self.player.gottaGoFastX(self.player.speed)
-                self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Right.png"), (self.player.iS//2, self.player.iS//2))
-                self.sword.direction = "Right"
+                if self.sword.mode == "Not Thrown":
+                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Right.png"), (self.player.iS//2, self.player.iS//2))
+                    self.sword.direction = "Right"
             elif keyCode == pygame.K_LEFT:
                 self.player.gottaGoFastX(-self.player.speed)
-                self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Left.png"), (self.player.iS//2, self.player.iS//2))
-                self.sword.direction = "Left"
+                if self.sword.mode == "Not Thrown":
+                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Left.png"), (self.player.iS//2, self.player.iS//2))
+                    self.sword.direction = "Left"
             if keyCode == pygame.K_DOWN:
                 self.player.gottaGoFastY(self.player.speed)
-                self.sword.direction = "Down"
+                if self.sword.mode == "Not Thrown":
+                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Down.png"), (self.player.iS//2, self.player.iS//2))
+                    self.sword.direction = "Down"
             elif keyCode == pygame.K_UP:
                 self.player.gottaGoFastY(-self.player.speed)
-                self.sword.direction = "Up"
-            if keyCode == pygame.K_SPACE:
-                self.sword.mode = "Thrown"
+                if self.sword.mode == "Not Thrown":
+                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Up.png"), (self.player.iS//2, self.player.iS//2))
+                    self.sword.direction = "Up"
             if keyCode == pygame.K_d:
                 self.player2.gottaGoFastX(self.player2.speed)
             elif keyCode == pygame.K_a:
@@ -56,6 +63,7 @@ class PygameGame(object):
                 self.player2.gottaGoFastY(self.player2.speed)
             elif keyCode == pygame.K_w:
                 self.player2.gottaGoFastY(-self.player2.speed)
+        #MODES
         elif self.mode == "Start":
             if keyCode == pygame.K_RIGHT and 15 <= self.player.mS <= 63:
 
@@ -116,6 +124,7 @@ class PygameGame(object):
             self.player2.gottaGoFastY(0)
 
     def timerFired(self, dt):
+        #COLLISIONS YAY
         for locations in self.maze.locations:
             if locations[0] - self.maze.iS/2 <= self.player.rect.x <= locations[0] + self.maze.iS/2 and locations[1] - self.maze.iS/2 <= self.player.rect.y <= locations[1] + self.maze.iS/2:
                 self.player.rect.x = self.player.oldX
@@ -129,33 +138,53 @@ class PygameGame(object):
         if self.player.rect.x - 10 <= self.player2.rect.x <= self.player.rect.x + 10 and self.player.rect.y - 10 <= self.player2.rect.y <= self.player.rect.y + 10:
             self.player.rect.x = self.player.oldX
             self.player.rect.y = self.player.oldY
-        self.player.update()
+        if self.sword.rect.x - 10 <= self.player2.rect.x <= self.sword.rect.x + 10 and self.sword.rect.y - 10 <= self.player2.rect.y <= self.sword.rect.y + 10:
+            self.count += 50
+            self.player2.health -= self.sword.damage
+            if self.player2.health <= 0:
+                print(100)
+        #THROWING STUFF
         if self.sword.mode == "Not Thrown":
+            self.count = 0
             self.sword.rect.x = self.player.rect.x + self.player.iS/2
             self.sword.rect.y = self.player.rect.y + self.player.iS/2
         if self.sword.mode == "Thrown":
+            self.count += 1
             if self.sword.direction == "Right":
-                self.sword.speedX = 5
+                self.sword.speedX = 15
             elif self.sword.direction == "Left":
-                self.sword.speedX = -5
+                self.sword.speedX = -15
             elif self.sword.direction == "Up":
-                self.speedY = -5
+                self.speedY = -15
             elif self.sword.direction == "Down":
-                self.sword.speedY = 5
-        if self.mode.
+                self.sword.speedY = 15
+        if self.count >= 50:
+            self.sword.mode = "Not Thrown"
+            self.count = 0
+            self.sword.speedX = 0
+            self.sword.speedY = 0
+            self.sword.rect.x = self.player.rect.x + self.player.iS/2
+            self.sword.rect.y = self.player.rect.y + self.player.iS/2
+
+
         self.sword.throw()
+        self.player.update()
         self.player2.update()
 
     def redrawAll(self, screen):
         if self.mode == "Play":
-            self.player.draw()
-            self.player2.draw()
+            if self.player.health > 0:
+                self.player.draw()
+            if self.player2.health > 0:
+                self.player2.draw()
             self.maze.draw()
             self.sword.draw()
         elif self.mode == "Start":
             begin = pygame.font.SysFont("monospace", 50).render("Press Space to Start", 1, (0, 0, 0))
             screen.blit(begin, (self.width/3.5, self.height/8))
             maze_Size = pygame.font.SysFont("monospace", 50).render("Input Maze Size: " + str(self.player.mS), 1, (0, 0, 0))
+            warning = pygame.font.SysFont("monospace", 25).render("Below 20 and above 36 dagger pos bad", 1, (0, 0, 0)) #pls remove later
+            screen.blit(warning, (self.width/3.5, self.height/1.5)) #lol gotta fix
             screen.blit(maze_Size, (self.width/3.5, self.height/2))
 
 
