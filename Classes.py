@@ -28,6 +28,40 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.speedY
     def draw(self):
         screen.blit(self.image, (self.rect.x, self.rect.y))
+class Player2(pygame.sprite.Sprite):
+    def __init__(self, image):
+        pygame.sprite.Sprite.__init__(self)
+        self.mS = 32
+        self.iS = round(1 / self.mS * 700) + 1
+        self.speedX = 0
+        self.speedY = 0
+        self.image = pygame.transform.scale(pygame.image.load(image),
+                                            ((round(1 / self.mS * 700) - 1, round(1 / self.mS * 700) - 1)))
+        self.rect = self.image.get_rect()
+        self.rect.x = round(1 / self.mS * 700) + 1
+        self.rect.y = round(1 / self.mS * 700) + 1
+        self.oldX = 0
+        self.oldY = 0
+        self.speed = 5
+        self.health = 100
+        self.mode = "Can Copy"
+        self.copies = []
+    def clone(self):
+        self.copies.append((self.rect.x, self.rect.y))
+    def gottaGoFastX(self, dx):
+        self.speedX = dx
+    def gottaGoFastY(self, dy):
+        self.speedY = dy
+    def update(self):
+        self.oldX = self.rect.x
+        self.oldY = self.rect.y
+        self.rect.x += self.speedX
+        self.rect.y += self.speedY
+    def draw(self):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+        for clones in self.copies:
+            screen.blit(self.image, (clones[0], clones[1]))
+
 
 class Maze(pygame.sprite.Sprite):
     def __init__(self):

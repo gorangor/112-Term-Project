@@ -11,12 +11,13 @@ class PygameGame(object):
         self.image = "Ice Zombie.png"
         self.image2 = "Masked Orc.png"
         self.player = Player(self.image)
-        self.player2 = Player(self.image2)
+        self.player2 = Player2(self.image2)
         self.player2.rect.x = 665 - self.player.rect.x
         self.player2.rect.y = 660 - self.player.rect.y
         self.maze = Maze()
         self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
         self.count = 0
+        self.cloneTimer = 0
 
     def mousePressed(self, x, y):
         print(x,y)
@@ -63,6 +64,10 @@ class PygameGame(object):
                 self.player2.gottaGoFastY(self.player2.speed)
             elif keyCode == pygame.K_w:
                 self.player2.gottaGoFastY(-self.player2.speed)
+            if keyCode == pygame.K_SPACE:
+                if self.player2.mode == "Can Copy":
+                    self.player2.clone()
+                    self.player2.mode = "Cant Copy"
         #MODES
         elif self.mode == "Start":
             if keyCode == pygame.K_RIGHT and 15 <= self.player.mS <= 63:
@@ -165,6 +170,12 @@ class PygameGame(object):
             self.sword.speedY = 0
             self.sword.rect.x = self.player.rect.x + self.player.iS/2
             self.sword.rect.y = self.player.rect.y + self.player.iS/2
+        #PLAYER 2
+        if self.player2.mode == "Cant Copy":
+            self.cloneTimer += 1
+            if self.cloneTimer >= 20:
+                self.cloneTimer = 0
+                self.player2.mode = "Can Copy"
 
 
         self.sword.throw()
