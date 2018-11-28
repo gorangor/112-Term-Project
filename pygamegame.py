@@ -144,7 +144,7 @@ class PygameGame(object):
             self.player.rect.x = self.player.oldX
             self.player.rect.y = self.player.oldY
         if self.sword.rect.x - 10 <= self.player2.rect.x <= self.sword.rect.x + 10 and self.sword.rect.y - 10 <= self.player2.rect.y <= self.sword.rect.y + 10:
-            self.count += 50
+            self.count += 25
             self.player2.health -= self.sword.damage
             if self.player2.health <= 0:
                 print(100)
@@ -156,14 +156,14 @@ class PygameGame(object):
         if self.sword.mode == "Thrown":
             self.count += 1
             if self.sword.direction == "Right":
-                self.sword.speedX = 15
+                self.sword.speedX = 30
             elif self.sword.direction == "Left":
-                self.sword.speedX = -15
+                self.sword.speedX = -30
             elif self.sword.direction == "Up":
-                self.speedY = -15
+                self.speedY = -30
             elif self.sword.direction == "Down":
-                self.sword.speedY = 15
-        if self.count >= 50:
+                self.sword.speedY = 30
+        if self.count >= 25:
             self.sword.mode = "Not Thrown"
             self.count = 0
             self.sword.speedX = 0

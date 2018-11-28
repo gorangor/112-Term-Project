@@ -58,9 +58,10 @@ class Player2(pygame.sprite.Sprite):
         self.rect.x += self.speedX
         self.rect.y += self.speedY
     def draw(self):
-        screen.blit(self.image, (self.rect.x, self.rect.y))
         for clones in self.copies:
             screen.blit(self.image, (clones[0], clones[1]))
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
 
 
 class Maze(pygame.sprite.Sprite):
