@@ -96,4 +96,5 @@ class Sword(pygame.sprite.Sprite):
     def draw(self):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 class PowerUp(pygame.sprite.Sprite):
-    pass
+    def __init__(self):
+        pass

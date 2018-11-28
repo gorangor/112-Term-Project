@@ -69,7 +69,7 @@ class PygameGame(object):
                     self.player2.clone()
                     self.player2.mode = "Cant Copy"
         #MODES
-        elif self.mode == "Start":
+        elif self.mode == "Adjust":
             if keyCode == pygame.K_RIGHT and 15 <= self.player.mS <= 63:
 
                 self.player.mS += 4
@@ -112,6 +112,32 @@ class PygameGame(object):
                 print((self.player2.rect.x, self.player2.rect.y))
                 print(self.maze.iS)
                 self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
+        elif self.mode == "Start":
+            if keyCode == pygame.K_SPACE:
+                # This is wholly unceccesary please edit starting on Classes
+                self.player.mS = 16
+                self.player.iS = round(1 / self.player.iS * 700) + 1
+                self.player.rect.x = round(1 / self.player.mS * 700) + 1
+                self.player.rect.y = round(1 / self.player.mS * 700) + 1
+                self.player2.mS = 16
+                self.player2.iS = round(1 / self.player.iS * 700) + 1
+                self.player2.rect.x = 630 - self.player.rect.x
+                self.player2.rect.y = 630 - self.player.rect.y
+                self.maze.mS = 16
+                self.maze.iS = round(1 / self.maze.mS * 700) + 1
+                self.maze.lst = maze(lstMaker(self.maze.mS - 1), self.maze.mS)
+                self.player.image = pygame.transform.scale(pygame.image.load(self.image),
+                                                           ((round(1 / self.player.mS * 700) - 1,
+                                                             round(1 / self.player.mS * 700) - 1)))
+                self.player2.image = pygame.transform.scale(pygame.image.load(self.image2),
+                                                            ((round(1 / self.player.mS * 700) - 1,
+                                                              round(1 / self.player.mS * 700) - 1)))
+                self.maze.image = pygame.transform.scale(pygame.image.load("wall_mid.png"),
+                                                         (self.maze.iS, self.maze.iS))
+                self.mode = "Play"
+                self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
+            elif keyCode == pygame.K_a:
+                self.mode = "Adjust"
             pass
 
     def keyReleased(self, keyCode, modifier):
@@ -145,7 +171,6 @@ class PygameGame(object):
                 self.player2.rect.y = self.player2.oldY
             if locations[0] - self.maze.iS/2 <= self.sword.rect.x <= locations[0] + self.maze.iS/2 and \
                     locations[1] - self.maze.iS/2 <= self.sword.rect.y <= locations[1] + self.maze.iS/2 and self.sword.mode == "Thrown":
-                print(69)
                 self.count += 50
                 self.sword.speedX = 0
                 self.sword.speedY = 0
@@ -203,15 +228,24 @@ class PygameGame(object):
                 self.player.draw()
             if self.player2.health > 0:
                 self.player2.draw()
+            else:
+                self.mode = "Win"
             self.maze.draw()
             self.sword.draw()
-        elif self.mode == "Start":
+        elif self.mode == "Adjust":
             begin = pygame.font.SysFont("monospace", 50).render("Press Space to Start", 1, (0, 0, 0))
             screen.blit(begin, (self.width/3.5, self.height/8))
             maze_Size = pygame.font.SysFont("monospace", 50).render("Input Maze Size: " + str(self.player.mS), 1, (0, 0, 0))
             warning = pygame.font.SysFont("monospace", 25).render("Below 20 and above 36 dagger pos bad", 1, (0, 0, 0)) #pls remove later
             screen.blit(warning, (self.width/3.5, self.height/1.5)) #lol gotta fix
             screen.blit(maze_Size, (self.width/3.5, self.height/2))
+        elif self.mode == "Start":
+            initial = pygame.font.SysFont("monospace", 35).render("Press Space to Start on Easy or A to adjust", 1, (0, 0, 0))
+            screen.blit(initial, (self.width / 5.5, self.height / 2.5))
+        elif self.mode == "Win":
+            win = pygame.font.SysFont("monospace", 55).render("Player 1 Wins", 1,
+                                                                  (0, 0, 0))
+            screen.blit(win, (self.width / 3, self.height / 2.5))
 
 
 
