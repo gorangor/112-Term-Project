@@ -35,13 +35,19 @@ class PygameGame(object):
             if keyCode == pygame.K_RIGHT:
                 self.player.gottaGoFastX(self.player.speed)
                 self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Right.png"), (self.player.iS//2, self.player.iS//2))
+                self.sword.direction = "Right"
             elif keyCode == pygame.K_LEFT:
                 self.player.gottaGoFastX(-self.player.speed)
                 self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Left.png"), (self.player.iS//2, self.player.iS//2))
+                self.sword.direction = "Left"
             if keyCode == pygame.K_DOWN:
                 self.player.gottaGoFastY(self.player.speed)
+                self.sword.direction = "Down"
             elif keyCode == pygame.K_UP:
                 self.player.gottaGoFastY(-self.player.speed)
+                self.sword.direction = "Up"
+            if keyCode == pygame.K_SPACE:
+                self.sword.mode = "Thrown"
             if keyCode == pygame.K_d:
                 self.player2.gottaGoFastX(self.player2.speed)
             elif keyCode == pygame.K_a:
@@ -124,9 +130,20 @@ class PygameGame(object):
             self.player.rect.x = self.player.oldX
             self.player.rect.y = self.player.oldY
         self.player.update()
-        self.sword.rect.x = self.player.rect.x + self.player.iS/2
-        self.sword.rect.y = self.player.rect.y + self.player.iS/2
-
+        if self.sword.mode == "Not Thrown":
+            self.sword.rect.x = self.player.rect.x + self.player.iS/2
+            self.sword.rect.y = self.player.rect.y + self.player.iS/2
+        if self.sword.mode == "Thrown":
+            if self.sword.direction == "Right":
+                self.sword.speedX = 5
+            elif self.sword.direction == "Left":
+                self.sword.speedX = -5
+            elif self.sword.direction == "Up":
+                self.speedY = -5
+            elif self.sword.direction == "Down":
+                self.sword.speedY = 5
+        if self.mode.
+        self.sword.throw()
         self.player2.update()
 
     def redrawAll(self, screen):
@@ -135,7 +152,6 @@ class PygameGame(object):
             self.player2.draw()
             self.maze.draw()
             self.sword.draw()
-            print(self.sword.rect.x)
         elif self.mode == "Start":
             begin = pygame.font.SysFont("monospace", 50).render("Press Space to Start", 1, (0, 0, 0))
             screen.blit(begin, (self.width/3.5, self.height/8))

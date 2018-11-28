@@ -52,7 +52,11 @@ class Sword(pygame.sprite.Sprite):
         self.rect.x = x + iS/2
         self.rect.y = y + iS/2
         self.mode = "Not Thrown"
+        self.direction = "Right"
         self.speedX = 0
         self.speedY = 0
+    def throw(self):
+        self.rect.x += self.speedX
+        self.rect.y += self.speedY
     def draw(self):
         screen.blit(self.image, (self.rect.x, self.rect.y))
