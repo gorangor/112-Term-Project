@@ -143,6 +143,14 @@ class PygameGame(object):
                     locations[1] - self.maze.iS/2 <= self.player2.rect.y <= locations[1] + self.maze.iS/2:
                 self.player2.rect.x = self.player2.oldX
                 self.player2.rect.y = self.player2.oldY
+            if locations[0] - self.maze.iS/2 <= self.sword.rect.x <= locations[0] + self.maze.iS/2 and \
+                    locations[1] - self.maze.iS/2 <= self.sword.rect.y <= locations[1] + self.maze.iS/2 and self.sword.mode == "Thrown":
+                print(69)
+                self.count += 50
+                self.sword.speedX = 0
+                self.sword.speedY = 0
+                self.sword.rect.x = self.player.rect.x + self.player.iS / 2
+                self.sword.rect.y = self.player.rect.y + self.player.iS / 2
         if self.player2.rect.x - 10 <= self.player.rect.x <= self.player2.rect.x + 10 and\
                 self.player2.rect.y - 10 <= self.player.rect.y <= self.player2.rect.y + 10:
             self.player2.rect.x = self.player2.oldX
