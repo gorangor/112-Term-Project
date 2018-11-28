@@ -12,6 +12,8 @@ class PygameGame(object):
         self.image2 = "Masked Orc.png"
         self.player = Player(self.image)
         self.player2 = Player(self.image2)
+        self.player2.rect.x = 665 - self.player.rect.x
+        self.player2.rect.y = 660 - self.player.rect.y
         self.maze = Maze()
 
 
@@ -55,9 +57,9 @@ class PygameGame(object):
                 self.player.rect.y = round(1 / self.player.mS * 700) + 1
                 self.player2.mS += 4
                 self.player2.iS = round(1/self.player.iS*700) + 1
-                self.player2.rect.y = round(1 / self.player.mS * 700) + 1
+                self.player2.rect.x = 665 - self.player.rect.x
+                self.player2.rect.y = 660 - self.player.rect.y
                 self.maze.mS += 4
-                self.player2.rect.x = (self.maze.mS-364) * round(1/self.maze.mS*700)
                 self.maze.iS = round(1 / self.maze.mS * 700) + 1
                 self.maze.lst = maze(lstMaker(self.maze.mS-1), self.maze.mS)
                 self.player.image = pygame.transform.scale(pygame.image.load(self.image),((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
@@ -71,8 +73,8 @@ class PygameGame(object):
                 self.player.rect.y = round(1 / self.player.mS * 700) + 1
                 self.player2.mS -= 4
                 self.player2.iS = round(1/self.player.iS*700) + 1
-                self.player2.rect.x = self.maze.iS * (self.maze.mS - 4) - self.maze.iS
-                self.player2.rect.y = round(1 / self.player.mS * 700) + 1
+                self.player2.rect.x = 635 - self.player.rect.x
+                self.player2.rect.y = 630 - self.player.rect.y
                 self.maze.mS -= 4
                 self.maze.iS = round(1 / self.maze.mS * 700) + 1
                 self.maze.lst = maze(lstMaker(self.maze.mS-1), self.maze.mS)
@@ -82,8 +84,8 @@ class PygameGame(object):
             elif keyCode == pygame.K_SPACE:
                 self.mode = "Play"
                 print(mazeDraw(self.maze.lst))
-                print(self.player2.rect.x)
-                print(self.maze.mS)
+                print((self.player2.rect.x, self.player2.rect.y))
+                print(self.maze.iS)
             pass
 
     def keyReleased(self, keyCode, modifier):
