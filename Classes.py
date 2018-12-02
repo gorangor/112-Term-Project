@@ -6,7 +6,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, image):
         pygame.sprite.Sprite.__init__(self)
         self.mS = 32
-        self.iS = round(1/self.mS*700) + 1
+        self.iS = round(1/self.mS*700) - 1
         self.speedX = 0
         self.speedY = 0
         self.image = pygame.transform.scale(pygame.image.load(image),((round(1/self.mS * 700) - 1, round(1/self.mS * 700) - 1)))
@@ -32,7 +32,7 @@ class Player2(pygame.sprite.Sprite):
     def __init__(self, image):
         pygame.sprite.Sprite.__init__(self)
         self.mS = 32
-        self.iS = round(1 / self.mS * 700) + 1
+        self.iS = round(1 / self.mS * 700) - 1
         self.speedX = 0
         self.speedY = 0
         self.image = pygame.transform.scale(pygame.image.load(image),
@@ -97,4 +97,5 @@ class Sword(pygame.sprite.Sprite):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 class PowerUp(pygame.sprite.Sprite):
     def __init__(self):
+
         pass

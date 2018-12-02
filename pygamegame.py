@@ -110,7 +110,7 @@ class PygameGame(object):
                 self.mode = "Play"
                 print(mazeDraw(self.maze.lst))
                 print((self.player2.rect.x, self.player2.rect.y))
-                print(self.maze.iS)
+                print(self.player.iS)
                 self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
         elif self.mode == "Start":
             if keyCode == pygame.K_SPACE:
@@ -161,12 +161,12 @@ class PygameGame(object):
     def timerFired(self, dt):
         #COLLISIONS YAY
         for locations in self.maze.locations:
-            if locations[0] - self.maze.iS/2 <= self.player.rect.x <= locations[0] + self.maze.iS/2 and \
-                    locations[1] - self.maze.iS/2 <= self.player.rect.y <= locations[1] + self.maze.iS/2:
+            if locations[0] - self.maze.iS/1.5 <= self.player.rect.x <= locations[0] + self.maze.iS/1.5 and \
+                    locations[1] - self.maze.iS/1.5 <= self.player.rect.y <= locations[1] + self.maze.iS/1.5:
                 self.player.rect.x = self.player.oldX
                 self.player.rect.y = self.player.oldY
-            if locations[0] - self.maze.iS/2 <= self.player2.rect.x <= locations[0] + self.maze.iS/2 and\
-                    locations[1] - self.maze.iS/2 <= self.player2.rect.y <= locations[1] + self.maze.iS/2:
+            if locations[0] - self.maze.iS/1.5 <= self.player2.rect.x <= locations[0] + self.maze.iS/1.5 and\
+                    locations[1] - self.maze.iS/1.5 <= self.player2.rect.y <= locations[1] + self.maze.iS/1.5:
                 self.player2.rect.x = self.player2.oldX
                 self.player2.rect.y = self.player2.oldY
             if locations[0] - self.maze.iS/2 <= self.sword.rect.x <= locations[0] + self.maze.iS/2 and \
@@ -174,8 +174,8 @@ class PygameGame(object):
                 self.count += 50
                 self.sword.speedX = 0
                 self.sword.speedY = 0
-                self.sword.rect.x = self.player.rect.x + self.player.iS / 2
-                self.sword.rect.y = self.player.rect.y + self.player.iS / 2
+                self.sword.rect.x = self.player.rect.x + self.player.iS/2
+                self.sword.rect.y = self.player.rect.y + self.player.iS/2
         if self.player2.rect.x - 10 <= self.player.rect.x <= self.player2.rect.x + 10 and\
                 self.player2.rect.y - 10 <= self.player.rect.y <= self.player2.rect.y + 10:
             self.player2.rect.x = self.player2.oldX
@@ -231,7 +231,8 @@ class PygameGame(object):
             else:
                 self.mode = "Win"
             self.maze.draw()
-            self.sword.draw()
+        if self.sword.mode == "Thrown":
+                self.sword.draw()
         elif self.mode == "Adjust":
             begin = pygame.font.SysFont("monospace", 50).render("Press Space to Start", 1, (0, 0, 0))
             screen.blit(begin, (self.width/3.5, self.height/8))
