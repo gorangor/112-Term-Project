@@ -9,7 +9,7 @@ class Player(pygame.sprite.Sprite):
         self.iS = round(1/self.mS*700) - 1
         self.speedX = 0
         self.speedY = 0
-        self.image = pygame.transform.scale(pygame.image.load(image),((round(1/self.mS * 700) - 1, round(1/self.mS * 700) - 1)))
+        self.image = pygame.transform.scale(pygame.image.load(image),((self.iS, self.iS)))
         self.rect = self.image.get_rect()
         self.rect.x = round(1/self.mS * 700) + 1
         self.rect.y = round(1/self.mS * 700) + 1

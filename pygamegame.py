@@ -18,6 +18,7 @@ class PygameGame(object):
         self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
         self.count = 0
         self.cloneTimer = 0
+        self.level = 16
 
     def mousePressed(self, x, y):
         print(x,y)
@@ -73,65 +74,66 @@ class PygameGame(object):
             if keyCode == pygame.K_RIGHT and 15 <= self.player.mS <= 63:
 
                 self.player.mS += 4
-                self.player.iS = round(1 / self.player.iS * 700) + 1
-                self.player.rect.x = round(1 / self.player.mS * 700) + 1
-                self.player.rect.y = round(1 / self.player.mS * 700) + 1
                 self.player2.mS += 4
-                self.player2.iS = round(1/self.player.iS*700) + 1
-                self.player2.rect.x = 665 - self.player.rect.x
-                self.player2.rect.y = 660 - self.player.rect.y
                 self.maze.mS += 4
+                self.player.iS = round(1 / self.player.mS * 700) - 1
+                self.player.rect.x = round(1 / self.player.mS * 700) - 1
+                self.player.rect.y = round(1 / self.player.mS * 700) - 1
+                self.player2.iS = round(1 / self.player.mS * 700) - 1
+                self.player2.rect.x = 688 - (2 * self.player2.iS)
+                self.player2.rect.y = 688 - (2 * self.player2.iS)
                 self.maze.iS = round(1 / self.maze.mS * 700) + 1
-                self.maze.lst = maze(lstMaker(self.maze.mS-1), self.maze.mS)
+                self.maze.lst = maze(lstMaker(self.maze.mS - 1), self.maze.mS)
                 self.player.image = pygame.transform.scale(pygame.image.load(self.image),
-                                                           ((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
+                                                           ((self.player.iS, self.player.iS)))
                 self.player2.image = pygame.transform.scale(pygame.image.load(self.image2),
-                                                            ((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
-                self.maze.image = pygame.transform.scale(pygame.image.load("wall_mid.png"), (self.maze.iS, self.maze.iS))
+                                                            (self.player2.iS, self.player2.iS))
+                self.maze.image = pygame.transform.scale(pygame.image.load("wall_mid.png"),
+                                                         (self.maze.iS, self.maze.iS))
+                self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
 
             elif keyCode == pygame.K_LEFT and 17 <= self.player.mS <= 65:
                 self.player.mS -= 4
-                self.player.iS = round(1 / self.player.iS * 700) + 1
-                self.player.rect.x = round(1 / self.player.mS * 700) + 1
-                self.player.rect.y = round(1 / self.player.mS * 700) + 1
                 self.player2.mS -= 4
-                self.player2.iS = round(1/self.player.iS*700) + 1
-                self.player2.rect.x = 635 - self.player.rect.x
-                self.player2.rect.y = 630 - self.player.rect.y
                 self.maze.mS -= 4
+                self.player.iS = round(1 / self.player.mS * 700) - 1
+                self.player.rect.x = round(1 / self.player.mS * 700) - 1
+                self.player.rect.y = round(1 / self.player.mS * 700) - 1
+                self.player2.iS = round(1 / self.player.mS * 700) - 1
+                self.player2.rect.x = 625 - self.player.rect.x
+                self.player2.rect.y = 625 - self.player.rect.y
                 self.maze.iS = round(1 / self.maze.mS * 700) + 1
-                self.maze.lst = maze(lstMaker(self.maze.mS-1), self.maze.mS)
+                self.maze.lst = maze(lstMaker(self.maze.mS - 1), self.maze.mS)
                 self.player.image = pygame.transform.scale(pygame.image.load(self.image),
-                                                           ((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
+                                                           ((self.player.iS, self.player.iS)))
                 self.player2.image = pygame.transform.scale(pygame.image.load(self.image2),
-                                                            ((round(1 / self.player.mS * 700) - 1, round(1 / self.player.mS * 700) - 1)))
-                self.maze.image = pygame.transform.scale(pygame.image.load("wall_mid.png"), (self.maze.iS, self.maze.iS))
+                                                            (self.player2.iS, self.player2.iS))
+                self.maze.image = pygame.transform.scale(pygame.image.load("wall_mid.png"),
+                                                         (self.maze.iS, self.maze.iS))
+                self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
             elif keyCode == pygame.K_SPACE:
                 self.mode = "Play"
                 print(mazeDraw(self.maze.lst))
                 print((self.player2.rect.x, self.player2.rect.y))
                 print(self.player.iS)
-                self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
         elif self.mode == "Start":
             if keyCode == pygame.K_SPACE:
-                # This is wholly unceccesary please edit starting on Classes
-                self.player.mS = 16
-                self.player.iS = round(1 / self.player.iS * 700) + 1
-                self.player.rect.x = round(1 / self.player.mS * 700) + 1
-                self.player.rect.y = round(1 / self.player.mS * 700) + 1
-                self.player2.mS = 16
-                self.player2.iS = round(1 / self.player.iS * 700) + 1
-                self.player2.rect.x = 630 - self.player.rect.x
-                self.player2.rect.y = 630 - self.player.rect.y
-                self.maze.mS = 16
+                #Easy mode
+                self.player.mS = self.level
+                self.player.iS = round(1 / self.player.mS * 700) -1
+                self.player.rect.x = round(1 / self.player.mS * 700) - 1
+                self.player.rect.y = round(1 / self.player.mS * 700) - 1
+                self.player2.mS = self.level
+                self.player2.iS = round(1 / self.player.mS * 700) - 1
+                self.player2.rect.x = 625 - self.player.rect.x
+                self.player2.rect.y = 625 - self.player.rect.y
+                self.maze.mS = self.level
                 self.maze.iS = round(1 / self.maze.mS * 700) + 1
                 self.maze.lst = maze(lstMaker(self.maze.mS - 1), self.maze.mS)
                 self.player.image = pygame.transform.scale(pygame.image.load(self.image),
-                                                           ((round(1 / self.player.mS * 700) - 1,
-                                                             round(1 / self.player.mS * 700) - 1)))
+                                                           ((self.player.iS, self.player.iS)))
                 self.player2.image = pygame.transform.scale(pygame.image.load(self.image2),
-                                                            ((round(1 / self.player.mS * 700) - 1,
-                                                              round(1 / self.player.mS * 700) - 1)))
+                                                            (self.player2.iS, self.player2.iS))
                 self.maze.image = pygame.transform.scale(pygame.image.load("wall_mid.png"),
                                                          (self.maze.iS, self.maze.iS))
                 self.mode = "Play"
