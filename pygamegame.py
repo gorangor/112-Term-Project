@@ -1,4 +1,5 @@
 import pygame
+import random
 from Classes import *
 from setup import *
 #Framework by Lucas Peraza
@@ -19,6 +20,9 @@ class PygameGame(object):
         self.count = 0
         self.cloneTimer = 0
         self.level = 16
+        self.time = 60
+        self.timeCount = 0
+        self.powerUps = []
 
     def mousePressed(self, x, y):
         print(x,y)
@@ -40,22 +44,22 @@ class PygameGame(object):
             if keyCode == pygame.K_RIGHT:
                 self.player.gottaGoFastX(self.player.speed)
                 if self.sword.mode == "Not Thrown":
-                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Right.png"), (self.player.iS//2, self.player.iS//2))
+                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Right.png"), (self.player.iS//3, self.player.iS//3))
                     self.sword.direction = "Right"
             elif keyCode == pygame.K_LEFT:
                 self.player.gottaGoFastX(-self.player.speed)
                 if self.sword.mode == "Not Thrown":
-                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Left.png"), (self.player.iS//2, self.player.iS//2))
+                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Left.png"), (self.player.iS//3, self.player.iS//3))
                     self.sword.direction = "Left"
             if keyCode == pygame.K_DOWN:
                 self.player.gottaGoFastY(self.player.speed)
                 if self.sword.mode == "Not Thrown":
-                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Down.png"), (self.player.iS//2, self.player.iS//2))
+                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Down.png"), (self.player.iS//3, self.player.iS//3))
                     self.sword.direction = "Down"
             elif keyCode == pygame.K_UP:
                 self.player.gottaGoFastY(-self.player.speed)
                 if self.sword.mode == "Not Thrown":
-                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Up.png"), (self.player.iS//2, self.player.iS//2))
+                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Up.png"), (self.player.iS//3, self.player.iS//3))
                     self.sword.direction = "Up"
             if keyCode == pygame.K_d:
                 self.player2.gottaGoFastX(self.player2.speed)
@@ -161,6 +165,16 @@ class PygameGame(object):
             self.player2.gottaGoFastY(0)
 
     def timerFired(self, dt):
+        #Timer
+        if self.mode == "Play":
+            self.timeCount += 1
+            if self.timeCount == 10:
+                self.time -= 1
+                self.timeCount = 0
+                x = random.choice(range(0, self.maze.iS * self.maze.mS))
+                y = random.choice(range(0, self.maze.iS * self.maze.mS))
+                self.powerUps.append((x, y))
+                print(self.powerUps)
         #COLLISIONS YAY
         for locations in self.maze.locations:
             if locations[0] - self.maze.iS/1.5 <= self.player.rect.x <= locations[0] + self.maze.iS/1.5 and \
@@ -171,8 +185,8 @@ class PygameGame(object):
                     locations[1] - self.maze.iS/1.5 <= self.player2.rect.y <= locations[1] + self.maze.iS/1.5:
                 self.player2.rect.x = self.player2.oldX
                 self.player2.rect.y = self.player2.oldY
-            if locations[0] - self.maze.iS/2 <= self.sword.rect.x <= locations[0] + self.maze.iS/2 and \
-                    locations[1] - self.maze.iS/2 <= self.sword.rect.y <= locations[1] + self.maze.iS/2 and self.sword.mode == "Thrown":
+            if locations[0] <= self.sword.rect.x <= locations[0] + self.maze.iS and \
+                    locations[1] <= self.sword.rect.y <= locations[1] + self.maze.iS and self.sword.mode == "Thrown":
                 self.count += 50
                 self.sword.speedX = 0
                 self.sword.speedY = 0
@@ -226,6 +240,10 @@ class PygameGame(object):
 
     def redrawAll(self, screen):
         if self.mode == "Play":
+            time = pygame.font.SysFont("monospace", self.maze.iS).render("Timer: " + str(self.time), 1, (0, 0, 0))
+            screen.blit(time, (330 - self.maze.iS, self.height - self.maze.iS))
+            for powerUps in self.powerUps:
+               pygame.draw.circle(screen, (0,0,0), (powerUps[0], powerUps[1]), 3)
             if self.player.health > 0:
                 self.player.draw()
             if self.player2.health > 0:
