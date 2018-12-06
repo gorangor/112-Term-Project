@@ -20,14 +20,13 @@ class PygameGame(object):
         self.count = 0
         self.cloneTimer = 0
         self.level = 16
-        self.time = self.level * 5
+        self.time = self.level * 6
         self.timeCount = 0
         self.powerUps = []
         self.winner = ""
         self.swordPower = 0
 
     def mousePressed(self, x, y):
-        print(x,y)
         pass
 
     def mouseReleased(self, x, y):
@@ -42,6 +41,7 @@ class PygameGame(object):
     def keyPressed(self, keyCode, modifier):
         if self.mode == "Play":
             if keyCode == pygame.K_r:
+                self.powerUps = []
                 self.mode = "Start"
             if keyCode == pygame.K_p:
                 self.sword.mode = "Thrown"
@@ -86,6 +86,7 @@ class PygameGame(object):
             self.player.mS = self.level
             self.maze.mS = self.level
             self.player2.mS = self.level
+            self.time = self.level * 6
             self.player.iS = round(1 / self.player.mS * 700) - 1
             self.player.rect.x = round(1 / self.player.mS * 700) - 1
             self.player.rect.y = round(1 / self.player.mS * 700) - 1
@@ -147,9 +148,6 @@ class PygameGame(object):
                 self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
             elif keyCode == pygame.K_SPACE:
                 self.mode = "Play"
-                print(mazeDraw(self.maze.lst))
-                print((self.player2.rect.x, self.player2.rect.y))
-                print(self.player.iS)
         elif self.mode == "Start":
             if keyCode == pygame.K_i:
                 self.mode = "Instructions"
@@ -158,6 +156,7 @@ class PygameGame(object):
                 self.player.mS = self.level
                 self.maze.mS = self.level
                 self.player2.mS = self.level
+                self.time = self.level * 6
                 self.player.iS = round(1 / self.player.mS * 700) -1
                 self.player.rect.x = round(1 / self.player.mS * 700) - 1
                 self.player.rect.y = round(1 / self.player.mS * 700) - 1
@@ -323,7 +322,7 @@ class PygameGame(object):
             time = pygame.font.SysFont("monospace", self.maze.iS).render("Timer: " + str(self.time), 1, (0, 0, 0))
             screen.blit(time, (330 - self.maze.iS, self.height - self.maze.iS))
             for powerUps in self.powerUps:
-               pygame.draw.circle(screen, (0,0,0), (powerUps[0], powerUps[1]), self.maze.iS//4)
+               pygame.draw.circle(screen, (0,255,0), (powerUps[0], powerUps[1]), self.maze.iS//4)
             if self.time == 0:
                 self.winner = "Player 2 "
                 self.mode = "Win"
