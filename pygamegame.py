@@ -152,7 +152,7 @@ class PygameGame(object):
                 print(self.player.iS)
         elif self.mode == "Start":
             if keyCode == pygame.K_i:
-                pass
+                self.mode = "Instructions"
             if keyCode == pygame.K_SPACE:
                 #Easy mode
                 self.player.mS = self.level
@@ -176,6 +176,9 @@ class PygameGame(object):
                 self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
             elif keyCode == pygame.K_a:
                 self.mode = "Adjust"
+        elif self.mode == "Instructions":
+            if keyCode == pygame.K_SPACE:
+                self.mode = "Start"
             pass
 
     def keyReleased(self, keyCode, modifier):
@@ -338,13 +341,48 @@ class PygameGame(object):
             screen.blit(initial, (self.width / 5.5, self.height / 2.5))
             instructions = pygame.font.SysFont("monospace", 35).render("Press I for instructions", 1, (0, 0, 0))
             screen.blit(instructions, (self.width / 3, self.height / 4.5))
-        elif self.mode == "Instructions":
-            pass
         elif self.mode == "Win":
             screen.fill((255,0,0))
             win = pygame.font.SysFont("monospace", 55).render(self.winner + "Wins", 1,
                                                                   (0, 0, 0))
             screen.blit(win, (self.width / 3, self.height / 2.5))
+        elif self.mode == "Instructions":
+            screen.fill((255,0,0))
+            p1 = pygame.font.SysFont("monospace", 35).render("Player 1 Controls", 1, (0, 0, 0))
+            screen.blit(p1, (0, self.height / 12))
+            p1Location = pygame.font.SysFont("monospace", 30).render("\n Spawns in upper Left Hand Corner ", 1, (0, 0, 0))
+            screen.blit(p1Location, (0, self.height / 12 + 40))
+            p1Arrows = pygame.font.SysFont("monospace", 30).render("\n Use Arrow Keys to point weapon and move", 1, (0, 0, 0))
+            screen.blit(p1Arrows, (0, self.height / 12 + 40*2))
+            p1p = pygame.font.SysFont("monospace", 30).render("\n Press P to fire Projectiles", 1, (0, 0, 0))
+            screen.blit(p1p, (0, self.height / 12 + 40 * 3))
+
+            p2 = pygame.font.SysFont("monospace", 35).render("Player 2 Controls", 1, (0, 0, 0))
+            screen.blit(p2, (0, self.height / 12 + 40 * 4))
+            p2Location = pygame.font.SysFont("monospace", 30).render("\n Spawns in Bottom Right Hand Corner ", 1,
+                                                                     (0, 0, 0))
+            screen.blit(p2Location, (0, self.height / 12 + 40 * 5))
+            p2Move = pygame.font.SysFont("monospace", 30).render("\n Use w,a,s,d to move", 1,
+                                                                   (0, 0, 0))
+            screen.blit(p2Move, (0, self.height / 12 + 40 * 6))
+            p2Space = pygame.font.SysFont("monospace", 30).render("\n Press Space to create Clones, Clones can block Player 1", 1, (0, 0, 0))
+            screen.blit(p2Space, (0, self.height / 12 + 40 * 7))
+
+            powerDescription = pygame.font.SysFont("monospace", 35).render("Power Ups", 1, (0, 0, 0))
+            screen.blit(powerDescription, (0, self.height / 12 + 40 * 8))
+            powerSpawn = pygame.font.SysFont("monospace", 30).render("\n Power Ups will spawn every Second on the Map", 1, (0, 0, 0))
+            screen.blit(powerSpawn, (0, self.height / 12 + 40 * 9))
+            powerP1 = pygame.font.SysFont("monospace", 30).render("\n Will give Player 1 a Speed Boost and Faster Projectiles", 1, (0, 0, 0))
+            screen.blit(powerP1, (0, self.height / 12 + 40 * 10))
+            powerP1 = pygame.font.SysFont("monospace", 30).render("\n Will give Player 2 a Speed Boost and Decrease Timer by Two Seconds", 1, (0, 0, 0))
+            screen.blit(powerP1, (0, self.height / 12 + 40 * 11))
+
+            winCondition = pygame.font.SysFont("monospace", 35).render("Win Condition", 1, (0, 0, 0))
+            screen.blit(winCondition, (0, self.height / 12 + 40 * 12))
+            winP1 = pygame.font.SysFont("monospace", 30).render("\n Player 1 wins if they shoot Player 2 with Projectile", 1, (0, 0, 0))
+            screen.blit(winP1, (0, self.height / 12 + 40 * 13))
+            winP2 = pygame.font.SysFont("monospace", 30).render("\n Player 2 wins if they Run out the Timer", 1, (0, 0, 0))
+            screen.blit(winP1, (0, self.height / 12 + 40 * 14))
 
 
 
