@@ -20,10 +20,11 @@ class PygameGame(object):
         self.count = 0
         self.cloneTimer = 0
         self.level = 16
-        self.time = self.level * 4
+        self.time = self.level * 5
         self.timeCount = 0
         self.powerUps = []
         self.winner = ""
+        self.swordPower = 0
 
     def mousePressed(self, x, y):
         print(x,y)
@@ -99,7 +100,7 @@ class PygameGame(object):
 
             if keyCode == pygame.K_RIGHT and 15 <= self.player.mS <= 63:
                 self.level += 4
-                self.time = self.level * 4
+                self.time = self.level * 6
                 self.player.mS += 4
                 self.player2.mS += 4
                 self.maze.mS += 4
@@ -121,7 +122,7 @@ class PygameGame(object):
 
             elif keyCode == pygame.K_LEFT and 17 <= self.player.mS <= 65:
                 self.level -= 4
-                self.time = self.level * 4
+                self.time = self.level * 6
                 self.player.mS -= 4
                 self.player2.mS -= 4
                 self.maze.mS -= 4
@@ -241,6 +242,21 @@ class PygameGame(object):
                 self.sword.speedY = 0
                 self.sword.rect.x = self.player.rect.x + self.player.iS/2
                 self.sword.rect.y = self.player.rect.y + self.player.iS/2
+        powerCount = -1
+        for powerUps in self.powerUps:
+            powerCount += 1
+            if self.player.rect.x <= powerUps[0] <= self.player.rect.x + self.player.iS and \
+                    self.player.rect.y <= powerUps[1] <= self.player.rect.y + self.player.iS:
+                self.powerUps.pop(powerCount)
+                powerCount -= 1
+                self.swordPower += 1
+                self.player.speed += 0.05
+            elif self.player2.rect.x <= powerUps[0] <= self.player2.rect.x + self.player2.iS and \
+                    self.player2.rect.y <= powerUps[1] <= self.player2.rect.y + self.player2.iS:
+                self.powerUps.pop(powerCount)
+                powerCount -= 1
+                self.time -= 2
+                self.player2.speed += 0.05
         if self.player2.rect.x - self.player.iS//2 <= self.player.rect.x <= self.player2.rect.x + self.player.iS//2 and\
                 self.player2.rect.y - self.player.iS//2 <= self.player.rect.y <= self.player2.rect.y + self.player.iS//2:
             self.player2.rect.x = self.player2.oldX
@@ -249,8 +265,8 @@ class PygameGame(object):
                 self.player.rect.y - 10 <= self.player2.rect.y <= self.player.rect.y + 10:
             self.player.rect.x = self.player.oldX
             self.player.rect.y = self.player.oldY
-        if self.sword.rect.x - 20 <= self.player2.rect.x <= self.sword.rect.x + 20 and \
-                self.sword.rect.y - 20 <= self.player2.rect.y <= self.sword.rect.y + 20:
+        if self.player2.rect.x <= self.sword.rect.x <= self.player2.rect.x + self.player2.iS and \
+                self.player2.rect.y <= self.sword.rect.y <= self.player2.rect.y + self.player2.iS:
             self.count += 25
             self.player2.health -= self.sword.damage
         #THROWING STUFF
@@ -261,13 +277,13 @@ class PygameGame(object):
         if self.sword.mode == "Thrown":
             self.count += 1
             if self.sword.direction == "Right":
-                self.sword.speedX = 30
+                self.sword.speedX = 30 + self.swordPower
             elif self.sword.direction == "Left":
-                self.sword.speedX = -30
+                self.sword.speedX = -30 -  self.swordPower
             elif self.sword.direction == "Up":
-                self.sword.speedY = -30
+                self.sword.speedY = -30 - self.swordPower
             elif self.sword.direction == "Down":
-                self.sword.speedY = 30
+                self.sword.speedY = 30 + self.swordPower
         if self.count >= 25:
             self.sword.mode = "Not Thrown"
             self.count = 0
