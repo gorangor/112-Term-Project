@@ -43,6 +43,7 @@ class PygameGame(object):
             if keyCode == pygame.K_r:
                 self.powerUps = []
                 self.mode = "Start"
+                self.player2.copies = []
             if keyCode == pygame.K_p:
                 self.sword.mode = "Thrown"
             if keyCode == pygame.K_RIGHT:
@@ -214,7 +215,6 @@ class PygameGame(object):
                 self.time -= 1
                 self.timeCount = 0
 
-                print(self.powerUps)
         #COLLISIONS YAY
         for locations in self.maze.locations:
             if locations[0] - self.maze.iS/1.5 <= self.player.rect.x <= locations[0] + self.maze.iS/1.5 and \
@@ -348,6 +348,8 @@ class PygameGame(object):
             screen.blit(initial, (self.width / 5.5, self.height / 2.75))
             instructions = pygame.font.SysFont("monospace", 35).render("Press I for instructions", 1, (0, 0, 0))
             screen.blit(instructions, (self.width / 3, self.height / 2.25))
+            name = pygame.font.SysFont("monospace", 45).render("Battle Maze", 1, (0, 0, 0))
+            screen.blit(name, (self.width / 2.6, self.height/8))
         elif self.mode == "Win":
             screen.fill((255,0,0))
             win = pygame.font.SysFont("monospace", 55).render(self.winner + "Wins", 1,
