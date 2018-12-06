@@ -23,6 +23,7 @@ class PygameGame(object):
         self.time = 60
         self.timeCount = 0
         self.powerUps = []
+        self.winner = ""
 
     def mousePressed(self, x, y):
         print(x,y)
@@ -84,8 +85,8 @@ class PygameGame(object):
                 self.player.rect.x = round(1 / self.player.mS * 700) - 1
                 self.player.rect.y = round(1 / self.player.mS * 700) - 1
                 self.player2.iS = round(1 / self.player.mS * 700) - 1
-                self.player2.rect.x = 680 - (2 * self.player2.iS)
-                self.player2.rect.y = 680 - (2 * self.player2.iS)
+                self.player2.rect.x = 690 - (2 * self.maze.iS)
+                self.player2.rect.y = 690 - (2 * self.maze.iS)
                 self.maze.iS = round(1 / self.maze.mS * 700) + 1
                 self.maze.lst = maze(lstMaker(self.maze.mS - 1), self.maze.mS)
                 self.player.image = pygame.transform.scale(pygame.image.load(self.image),
@@ -104,8 +105,8 @@ class PygameGame(object):
                 self.player.rect.x = round(1 / self.player.mS * 700) - 1
                 self.player.rect.y = round(1 / self.player.mS * 700) - 1
                 self.player2.iS = round(1 / self.player.mS * 700) - 1
-                self.player2.rect.x = 680 - (2 * self.player2.iS)
-                self.player2.rect.y = 680 - (2 * self.player2.iS)
+                self.player2.rect.x = 690 - (3 * self.maze.iS)
+                self.player2.rect.y = 690 - (3 * self.maze.iS)
                 self.maze.iS = round(1 / self.maze.mS * 700) + 1
                 self.maze.lst = maze(lstMaker(self.maze.mS - 1), self.maze.mS)
                 self.player.image = pygame.transform.scale(pygame.image.load(self.image),
@@ -130,8 +131,8 @@ class PygameGame(object):
                 self.player.rect.x = round(1 / self.player.mS * 700) - 1
                 self.player.rect.y = round(1 / self.player.mS * 700) - 1
                 self.player2.iS = round(1 / self.player.mS * 700) - 1
-                self.player2.rect.x = 690 - (2 * self.player2.iS)
-                self.player2.rect.y = 690 - (2 * self.player2.iS)
+                self.player2.rect.x = 700 - (6 * self.maze.iS)
+                self.player2.rect.y = 700 - (6 * self.maze.iS)
                 self.maze.iS = round(1 / self.maze.mS * 700) + 1
                 self.maze.lst = maze(lstMaker(self.maze.mS - 1), self.maze.mS)
                 self.player.image = pygame.transform.scale(pygame.image.load(self.image),
@@ -168,12 +169,17 @@ class PygameGame(object):
         #Timer
         if self.mode == "Play":
             self.timeCount += 1
+            for locations in self.maze.locations:
+                x = random.choice(range(0, 700 - self.maze.iS))
+                y = random.choice(range(0, 700 - self.maze.iS))
+                if locations[0] <= x <= locations[0] + self.maze.iS*3 and locations[1] <= y <= locations[
+                    1] + self.maze.iS*3:
+                    self.powerUps.append((x, y))
+                    break
             if self.timeCount == 10:
                 self.time -= 1
                 self.timeCount = 0
-                x = random.choice(range(0, self.maze.iS * self.maze.mS))
-                y = random.choice(range(0, self.maze.iS * self.maze.mS))
-                self.powerUps.append((x, y))
+
                 print(self.powerUps)
         #COLLISIONS YAY
         for locations in self.maze.locations:
@@ -243,12 +249,16 @@ class PygameGame(object):
             time = pygame.font.SysFont("monospace", self.maze.iS).render("Timer: " + str(self.time), 1, (0, 0, 0))
             screen.blit(time, (330 - self.maze.iS, self.height - self.maze.iS))
             for powerUps in self.powerUps:
-               pygame.draw.circle(screen, (0,0,0), (powerUps[0], powerUps[1]), 3)
+               pygame.draw.circle(screen, (0,0,0), (powerUps[0], powerUps[1]), self.maze.iS//4)
+            if self.time == 0:
+                self.winner = "Player 2 "
+                self.mode = "Win"
             if self.player.health > 0:
                 self.player.draw()
             if self.player2.health > 0:
                 self.player2.draw()
             else:
+                self.winner = "Player 1 "
                 self.mode = "Win"
             self.maze.draw()
         if self.sword.mode == "Thrown":
@@ -257,14 +267,12 @@ class PygameGame(object):
             begin = pygame.font.SysFont("monospace", 50).render("Press Space to Start", 1, (0, 0, 0))
             screen.blit(begin, (self.width/3.5, self.height/8))
             maze_Size = pygame.font.SysFont("monospace", 50).render("Input Maze Size: " + str(self.player.mS), 1, (0, 0, 0))
-            warning = pygame.font.SysFont("monospace", 25).render("Below 20 and above 36 dagger pos bad", 1, (0, 0, 0)) #pls remove later
-            screen.blit(warning, (self.width/3.5, self.height/1.5)) #lol gotta fix
             screen.blit(maze_Size, (self.width/3.5, self.height/2))
         elif self.mode == "Start":
             initial = pygame.font.SysFont("monospace", 35).render("Press Space to Start on Easy or A to adjust", 1, (0, 0, 0))
             screen.blit(initial, (self.width / 5.5, self.height / 2.5))
         elif self.mode == "Win":
-            win = pygame.font.SysFont("monospace", 55).render("Player 1 Wins", 1,
+            win = pygame.font.SysFont("monospace", 55).render(self.winner + "Wins", 1,
                                                                   (0, 0, 0))
             screen.blit(win, (self.width / 3, self.height / 2.5))
 
