@@ -48,22 +48,26 @@ class PygameGame(object):
             if keyCode == pygame.K_RIGHT:
                 self.player.gottaGoFastX(self.player.speed)
                 if self.sword.mode == "Not Thrown":
-                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Right.png"), (self.player.iS//3, self.player.iS//3))
+                    self.sword.image = pygame.transform.scale(\
+                        pygame.image.load("Sword_Right.png"), (self.player.iS//3, self.player.iS//3))
                     self.sword.direction = "Right"
             elif keyCode == pygame.K_LEFT:
                 self.player.gottaGoFastX(-self.player.speed)
                 if self.sword.mode == "Not Thrown":
-                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Left.png"), (self.player.iS//3, self.player.iS//3))
+                    self.sword.image = pygame.transform.scale(\
+                        pygame.image.load("Sword_Left.png"), (self.player.iS//3, self.player.iS//3))
                     self.sword.direction = "Left"
             if keyCode == pygame.K_DOWN:
                 self.player.gottaGoFastY(self.player.speed)
                 if self.sword.mode == "Not Thrown":
-                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Down.png"), (self.player.iS//3, self.player.iS//3))
+                    self.sword.image = pygame.transform.scale(\
+                        pygame.image.load("Sword_Down.png"), (self.player.iS//3, self.player.iS//3))
                     self.sword.direction = "Down"
             elif keyCode == pygame.K_UP:
                 self.player.gottaGoFastY(-self.player.speed)
                 if self.sword.mode == "Not Thrown":
-                    self.sword.image = pygame.transform.scale(pygame.image.load("Sword_Up.png"), (self.player.iS//3, self.player.iS//3))
+                    self.sword.image = pygame.transform.scale(\
+                        pygame.image.load("Sword_Up.png"), (self.player.iS//3, self.player.iS//3))
                     self.sword.direction = "Up"
             if keyCode == pygame.K_d:
                 self.player2.gottaGoFastX(self.player2.speed)
@@ -210,22 +214,6 @@ class PygameGame(object):
 
                 print(self.powerUps)
         #COLLISIONS YAY
-        cloneCount = -1
-        for clones in self.player2.copies:
-            cloneCount +=1
-            if clones[0] - self.player.iS//2 <= self.player.rect.x <= clones[0] + self.player.iS//2 and \
-                clones[1] - self.player.iS//2 <= self.player.rect.y <= clones[1] + self.player.iS//2:
-                self.player.rect.x = self.player.oldX
-                self.player.rect.y = self.player.oldY
-            if clones[0] <= self.sword.rect.x <= clones[0] + self.maze.iS and \
-                clones[1] <= self.sword.rect.y <= clones[1] + self.maze.iS and self.sword.mode == "Thrown":
-                self.player2.copies.pop(cloneCount)
-                cloneCount -= 1
-                self.count += 50
-                self.sword.speedX = 0
-                self.sword.speedY = 0
-                self.sword.rect.x = self.player.rect.x + self.player.iS / 2
-                self.sword.rect.y = self.player.rect.y + self.player.iS / 2
         for locations in self.maze.locations:
             if locations[0] - self.maze.iS/1.5 <= self.player.rect.x <= locations[0] + self.maze.iS/1.5 and \
                     locations[1] - self.maze.iS/1.5 <= self.player.rect.y <= locations[1] + self.maze.iS/1.5:
@@ -242,6 +230,22 @@ class PygameGame(object):
                 self.sword.speedY = 0
                 self.sword.rect.x = self.player.rect.x + self.player.iS/2
                 self.sword.rect.y = self.player.rect.y + self.player.iS/2
+        cloneCount = -1
+        for clones in self.player2.copies:
+            cloneCount += 1
+            if self.player.rect.x <= clones[0] <= self.player.rect.x + self.player.iS and \
+                    self.player.rect.x <= clones[1] <= self.player.rect.x + self.player.iS:
+                self.player.rect.x = self.player.oldX
+                self.player.rect.y = self.player.oldY
+            if clones[0] <= self.sword.rect.x <= clones[0] + self.maze.iS and \
+                    clones[1] <= self.sword.rect.y <= clones[1] + self.maze.iS and self.sword.mode == "Thrown":
+                self.player2.copies.pop(cloneCount)
+                cloneCount -= 1
+                self.count += 50
+                self.sword.speedX = 0
+                self.sword.speedY = 0
+                self.sword.rect.x = self.player.rect.x + self.player.iS / 2
+                self.sword.rect.y = self.player.rect.y + self.player.iS / 2
         powerCount = -1
         for powerUps in self.powerUps:
             powerCount += 1
