@@ -5,7 +5,7 @@ from pygamegame import *
 class Player(pygame.sprite.Sprite):
     def __init__(self, image):
         pygame.sprite.Sprite.__init__(self)
-        self.mS = 32
+        self.mS = 16
         self.iS = round(1/self.mS*700) - 1
         self.speedX = 0
         self.speedY = 0

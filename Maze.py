@@ -43,4 +43,4 @@ def mazeDraw(lst):
         string += "\n"
     return string
 
-print(mazeDraw(maze(lstMaker(16), 16)))
+print(mazeDraw(maze(lstMaker(15), 16)))

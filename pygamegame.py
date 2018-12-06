@@ -20,7 +20,7 @@ class PygameGame(object):
         self.count = 0
         self.cloneTimer = 0
         self.level = 16
-        self.time = 60
+        self.time = self.level * 4
         self.timeCount = 0
         self.powerUps = []
         self.winner = ""
@@ -40,6 +40,8 @@ class PygameGame(object):
 
     def keyPressed(self, keyCode, modifier):
         if self.mode == "Play":
+            if keyCode == pygame.K_r:
+                self.mode = "Start"
             if keyCode == pygame.K_p:
                 self.sword.mode = "Thrown"
             if keyCode == pygame.K_RIGHT:
@@ -76,8 +78,28 @@ class PygameGame(object):
                     self.player2.mode = "Cant Copy"
         #MODES
         elif self.mode == "Adjust":
-            if keyCode == pygame.K_RIGHT and 15 <= self.player.mS <= 63:
+            self.player.mS = self.level
+            self.maze.mS = self.level
+            self.player2.mS = self.level
+            self.player.iS = round(1 / self.player.mS * 700) - 1
+            self.player.rect.x = round(1 / self.player.mS * 700) - 1
+            self.player.rect.y = round(1 / self.player.mS * 700) - 1
+            self.player2.iS = round(1 / self.player.mS * 700) - 1
+            self.player2.rect.x = 700 - (6 * self.maze.iS)
+            self.player2.rect.y = 700 - (6 * self.maze.iS)
+            self.maze.iS = round(1 / self.maze.mS * 700) + 1
+            self.maze.lst = maze(lstMaker(self.maze.mS - 1), self.maze.mS)
+            self.player.image = pygame.transform.scale(pygame.image.load(self.image),
+                                                       ((self.player.iS, self.player.iS)))
+            self.player2.image = pygame.transform.scale(pygame.image.load(self.image2),
+                                                        (self.player2.iS, self.player2.iS))
+            self.maze.image = pygame.transform.scale(pygame.image.load("wall_mid.png"),
+                                                     (self.maze.iS, self.maze.iS))
+            self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
 
+            if keyCode == pygame.K_RIGHT and 15 <= self.player.mS <= 63:
+                self.level += 4
+                self.time = self.level * 4
                 self.player.mS += 4
                 self.player2.mS += 4
                 self.maze.mS += 4
@@ -98,6 +120,8 @@ class PygameGame(object):
                 self.sword = Sword(self.player.rect.x, self.player.rect.y, self.player.iS)
 
             elif keyCode == pygame.K_LEFT and 17 <= self.player.mS <= 65:
+                self.level -= 4
+                self.time = self.level * 4
                 self.player.mS -= 4
                 self.player2.mS -= 4
                 self.maze.mS -= 4
@@ -122,6 +146,8 @@ class PygameGame(object):
                 print((self.player2.rect.x, self.player2.rect.y))
                 print(self.player.iS)
         elif self.mode == "Start":
+            if keyCode == pygame.K_i:
+                pass
             if keyCode == pygame.K_SPACE:
                 #Easy mode
                 self.player.mS = self.level
@@ -169,19 +195,36 @@ class PygameGame(object):
         #Timer
         if self.mode == "Play":
             self.timeCount += 1
-            for locations in self.maze.locations:
-                x = random.choice(range(0, 700 - self.maze.iS))
-                y = random.choice(range(0, 700 - self.maze.iS))
-                if locations[0] <= x <= locations[0] + self.maze.iS*3 and locations[1] <= y <= locations[
-                    1] + self.maze.iS*3:
-                    self.powerUps.append((x, y))
-                    break
+            if self.timeCount == 10:
+                for locations in self.maze.locations:
+                    x = random.choice(range(self.maze.iS, 700 - self.maze.iS*2))
+                    y = random.choice(range(self.maze.iS, 700 - self.maze.iS*2))
+                    if locations[0] <= x <= locations[0] + self.maze.iS*2 and locations[1] <= y <= locations[
+                        1] + self.maze.iS*2:
+                        self.powerUps.append((x, y))
+                        break
             if self.timeCount == 10:
                 self.time -= 1
                 self.timeCount = 0
 
                 print(self.powerUps)
         #COLLISIONS YAY
+        cloneCount = -1
+        for clones in self.player2.copies:
+            cloneCount +=1
+            if clones[0] - self.player.iS//2 <= self.player.rect.x <= clones[0] + self.player.iS//2 and \
+                clones[1] - self.player.iS//2 <= self.player.rect.y <= clones[1] + self.player.iS//2:
+                self.player.rect.x = self.player.oldX
+                self.player.rect.y = self.player.oldY
+            if clones[0] <= self.sword.rect.x <= clones[0] + self.maze.iS and \
+                clones[1] <= self.sword.rect.y <= clones[1] + self.maze.iS and self.sword.mode == "Thrown":
+                self.player2.copies.pop(cloneCount)
+                cloneCount -= 1
+                self.count += 50
+                self.sword.speedX = 0
+                self.sword.speedY = 0
+                self.sword.rect.x = self.player.rect.x + self.player.iS / 2
+                self.sword.rect.y = self.player.rect.y + self.player.iS / 2
         for locations in self.maze.locations:
             if locations[0] - self.maze.iS/1.5 <= self.player.rect.x <= locations[0] + self.maze.iS/1.5 and \
                     locations[1] - self.maze.iS/1.5 <= self.player.rect.y <= locations[1] + self.maze.iS/1.5:
@@ -198,8 +241,8 @@ class PygameGame(object):
                 self.sword.speedY = 0
                 self.sword.rect.x = self.player.rect.x + self.player.iS/2
                 self.sword.rect.y = self.player.rect.y + self.player.iS/2
-        if self.player2.rect.x - 10 <= self.player.rect.x <= self.player2.rect.x + 10 and\
-                self.player2.rect.y - 10 <= self.player.rect.y <= self.player2.rect.y + 10:
+        if self.player2.rect.x - self.player.iS//2 <= self.player.rect.x <= self.player2.rect.x + self.player.iS//2 and\
+                self.player2.rect.y - self.player.iS//2 <= self.player.rect.y <= self.player2.rect.y + self.player.iS//2:
             self.player2.rect.x = self.player2.oldX
             self.player2.rect.y = self.player2.oldY
         if self.player.rect.x - 10 <= self.player2.rect.x <= self.player.rect.x + 10 and\
@@ -264,14 +307,21 @@ class PygameGame(object):
         if self.sword.mode == "Thrown":
                 self.sword.draw()
         elif self.mode == "Adjust":
+            screen.fill((255,0,0))
             begin = pygame.font.SysFont("monospace", 50).render("Press Space to Start", 1, (0, 0, 0))
             screen.blit(begin, (self.width/3.5, self.height/8))
             maze_Size = pygame.font.SysFont("monospace", 50).render("Input Maze Size: " + str(self.player.mS), 1, (0, 0, 0))
             screen.blit(maze_Size, (self.width/3.5, self.height/2))
         elif self.mode == "Start":
+            screen.fill((255,0,0))
             initial = pygame.font.SysFont("monospace", 35).render("Press Space to Start on Easy or A to adjust", 1, (0, 0, 0))
             screen.blit(initial, (self.width / 5.5, self.height / 2.5))
+            instructions = pygame.font.SysFont("monospace", 35).render("Press I for instructions", 1, (0, 0, 0))
+            screen.blit(instructions, (self.width / 3, self.height / 4.5))
+        elif self.mode == "Instructions":
+            pass
         elif self.mode == "Win":
+            screen.fill((255,0,0))
             win = pygame.font.SysFont("monospace", 55).render(self.winner + "Wins", 1,
                                                                   (0, 0, 0))
             screen.blit(win, (self.width / 3, self.height / 2.5))
