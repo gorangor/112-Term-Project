@@ -345,9 +345,9 @@ class PygameGame(object):
         elif self.mode == "Start":
             screen.fill((255,0,0))
             initial = pygame.font.SysFont("monospace", 35).render("Press Space to Start on Easy or A to adjust", 1, (0, 0, 0))
-            screen.blit(initial, (self.width / 5.5, self.height / 2.5))
+            screen.blit(initial, (self.width / 5.5, self.height / 2.75))
             instructions = pygame.font.SysFont("monospace", 35).render("Press I for instructions", 1, (0, 0, 0))
-            screen.blit(instructions, (self.width / 3, self.height / 4.5))
+            screen.blit(instructions, (self.width / 3, self.height / 2.25))
         elif self.mode == "Win":
             screen.fill((255,0,0))
             win = pygame.font.SysFont("monospace", 55).render(self.winner + "Wins", 1,
@@ -377,7 +377,7 @@ class PygameGame(object):
 
             powerDescription = pygame.font.SysFont("monospace", 35).render("Power Ups", 1, (0, 0, 0))
             screen.blit(powerDescription, (0, self.height / 12 + 40 * 8))
-            powerSpawn = pygame.font.SysFont("monospace", 30).render("\n Power Ups will spawn every Second on the Map", 1, (0, 0, 0))
+            powerSpawn = pygame.font.SysFont("monospace", 30).render("\n Power Ups will spawn every second on the Map", 1, (0, 0, 0))
             screen.blit(powerSpawn, (0, self.height / 12 + 40 * 9))
             powerP1 = pygame.font.SysFont("monospace", 30).render("\n Will give Player 1 a Speed Boost and Faster Projectiles", 1, (0, 0, 0))
             screen.blit(powerP1, (0, self.height / 12 + 40 * 10))
@@ -389,7 +389,10 @@ class PygameGame(object):
             winP1 = pygame.font.SysFont("monospace", 30).render("\n Player 1 wins if they shoot Player 2 with Projectile", 1, (0, 0, 0))
             screen.blit(winP1, (0, self.height / 12 + 40 * 13))
             winP2 = pygame.font.SysFont("monospace", 30).render("\n Player 2 wins if they Run out the Timer", 1, (0, 0, 0))
-            screen.blit(winP1, (0, self.height / 12 + 40 * 14))
+            screen.blit(winP2, (0, self.height / 12 + 40 * 14))
+
+            reset = pygame.font.SysFont("monospace", 35).render("Press R to Reset", 1, (0, 0, 0))
+            screen.blit(reset, (0, self.height / 12 + 40 * 15))
 
 
 
