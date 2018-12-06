@@ -2,6 +2,7 @@ import pygame
 from setup import *
 from Maze import *
 from pygamegame import *
+#Defines the classes used in the main file
 class Player(pygame.sprite.Sprite):
     def __init__(self, image):
         pygame.sprite.Sprite.__init__(self)

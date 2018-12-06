@@ -1,4 +1,5 @@
 import random
+#Creates the Maze
 def lstMaker(x):
     lst = []
     for num in range(0,x):
@@ -43,4 +44,3 @@ def mazeDraw(lst):
         string += "\n"
     return string
 
-print(mazeDraw(maze(lstMaker(15), 16)))
