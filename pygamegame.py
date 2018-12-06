@@ -233,6 +233,7 @@ class PygameGame(object):
                 self.sword.speedY = 0
                 self.sword.rect.x = self.player.rect.x + self.player.iS/2
                 self.sword.rect.y = self.player.rect.y + self.player.iS/2
+
         cloneCount = -1
         for clones in self.player2.copies:
             cloneCount += 1
@@ -249,6 +250,7 @@ class PygameGame(object):
                 self.sword.speedY = 0
                 self.sword.rect.x = self.player.rect.x + self.player.iS / 2
                 self.sword.rect.y = self.player.rect.y + self.player.iS / 2
+
         powerCount = -1
         for powerUps in self.powerUps:
             powerCount += 1
@@ -264,23 +266,28 @@ class PygameGame(object):
                 powerCount -= 1
                 self.time -= 2
                 self.player2.speed += 0.05
+
         if self.player2.rect.x - self.player.iS//2 <= self.player.rect.x <= self.player2.rect.x + self.player.iS//2 and\
                 self.player2.rect.y - self.player.iS//2 <= self.player.rect.y <= self.player2.rect.y + self.player.iS//2:
             self.player2.rect.x = self.player2.oldX
             self.player2.rect.y = self.player2.oldY
+
         if self.player.rect.x - 10 <= self.player2.rect.x <= self.player.rect.x + 10 and\
                 self.player.rect.y - 10 <= self.player2.rect.y <= self.player.rect.y + 10:
             self.player.rect.x = self.player.oldX
             self.player.rect.y = self.player.oldY
+
         if self.player2.rect.x <= self.sword.rect.x <= self.player2.rect.x + self.player2.iS and \
                 self.player2.rect.y <= self.sword.rect.y <= self.player2.rect.y + self.player2.iS:
             self.count += 25
             self.player2.health -= self.sword.damage
+
         #THROWING STUFF
         if self.sword.mode == "Not Thrown":
             self.count = 0
             self.sword.rect.x = self.player.rect.x + self.player.iS/2
             self.sword.rect.y = self.player.rect.y + self.player.iS/2
+
         if self.sword.mode == "Thrown":
             self.count += 1
             if self.sword.direction == "Right":
@@ -291,6 +298,7 @@ class PygameGame(object):
                 self.sword.speedY = -30 - self.swordPower
             elif self.sword.direction == "Down":
                 self.sword.speedY = 30 + self.swordPower
+
         if self.count >= 25:
             self.sword.mode = "Not Thrown"
             self.count = 0
@@ -298,13 +306,13 @@ class PygameGame(object):
             self.sword.speedY = 0
             self.sword.rect.x = self.player.rect.x + self.player.iS/2
             self.sword.rect.y = self.player.rect.y + self.player.iS/2
+
         #PLAYER 2
         if self.player2.mode == "Cant Copy":
             self.cloneTimer += 1
             if self.cloneTimer >= 20:
                 self.cloneTimer = 0
                 self.player2.mode = "Can Copy"
-
 
         self.sword.throw()
         self.player.update()
