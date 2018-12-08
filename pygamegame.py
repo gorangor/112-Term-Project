@@ -249,6 +249,7 @@ class PygameGame(object):
                 self.sword.speedY = 0
                 self.sword.rect.x = self.player.rect.x + self.player.iS / 2
                 self.sword.rect.y = self.player.rect.y + self.player.iS / 2
+                self.time -= 2
 
         powerCount = -1
         for powerUps in self.powerUps:
@@ -323,7 +324,7 @@ class PygameGame(object):
             screen.blit(time, (330 - self.maze.iS, self.height - self.maze.iS))
             for powerUps in self.powerUps:
                pygame.draw.circle(screen, (0,255,0), (powerUps[0], powerUps[1]), self.maze.iS//4)
-            if self.time == 0:
+            if self.time <= 0:
                 self.winner = "Player 2 "
                 self.mode = "Win"
             if self.player.health > 0:
