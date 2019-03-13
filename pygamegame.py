@@ -236,8 +236,8 @@ class PygameGame(object):
         cloneCount = -1
         for clones in self.player2.copies:
             cloneCount += 1
-            if self.player.rect.x <= clones[0] <= self.player.rect.x + self.player.iS and \
-                    self.player.rect.x <= clones[1] <= self.player.rect.x + self.player.iS:
+            if self.player.rect.x <= clones[0] <= self.player.rect.x + self.player.iS/2 and \
+                    self.player.rect.y <= clones[1] <= self.player.rect.y + self.player.iS/2:
                 self.player.rect.x = self.player.oldX
                 self.player.rect.y = self.player.oldY
             if clones[0] <= self.sword.rect.x <= clones[0] + self.maze.iS and \
